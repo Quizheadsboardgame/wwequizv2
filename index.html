@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #0CC0DF; /* Background color */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40%;
+            max-width: 800px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow */
+            padding: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 5px solid #0CC0DF; /* Outer blue border color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .qa-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .question {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .answer {
+            font-size: 1.2em;
+            color: #555;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="quizImage" src="https://i.imgur.com/Kxac95Y.png" alt="Quiz Image">
+        <div class="qa-box">
+            <div id="question" class="question">Click the image to get a question!</div>
+            <div id="answer" class="answer"></div>
+        </div>
+    </div>
+    
+    <script>
+        const questionsAndAnswers = [
+            { question: "Who won the WWE Royal Rumble in 2023?", answer: "Cody Rhodes" },
+            { question: "Which wrestler holds the record for the most WWE Championship reigns?", answer: "Ric Flair" },
+            { question: "Who won the WWE Money in the Bank ladder match in 2022?", answer: "Theory" },
+            { question: "Which WWE superstar is known as 'The Deadman'?", answer: "The Undertaker" },
+            { question: "Who was the winner of the 2022 WWE Survivor Series WarGames match?", answer: "The Bloodline" },
+            { question: "Which wrestler is known for the 'RKO' finishing move?", answer: "Randy Orton" },
+            { question: "Who won the WWE SmackDown Women's Championship at WrestleMania 37?", answer: "Bianca Belair" },
+            { question: "Which WWE legend is famous for his 'Stone Cold Stunner'?", answer: "Stone Cold Steve Austin" },
+            { question: "Who was the WWE Champion before Brock Lesnar won the title at SummerSlam 2022?", answer: "Roman Reigns" },
+            { question: "Which wrestler is known as 'The Beast Incarnate'?", answer: "Brock Lesnar" },
+            { question: "Who won the WWE NXT Championship in 2021?", answer: "Bron Breakker" },
+            { question: "Which WWE superstar has a finishing move called 'The Attitude Adjustment'?", answer: "John Cena" },
+            { question: "Who was the 2022 WWE Women's Royal Rumble winner?", answer: "Ronda Rousey" },
+            { question: "Which WWE wrestler is known for his 'Yes! Movement'?", answer: "Daniel Bryan" },
+            { question: "Who is known as 'The Game' in WWE?", answer: "Triple H" },
+            { question: "Who won the WWE Intercontinental Championship in 2023?", answer: "Gunther" },
+            { question: "Which WWE superstar is known for his 'Spear' finishing move?", answer: "Edge" },
+            { question: "Who won the WWE United States Championship at WrestleMania 38?", answer: "Austin Theory" },
+            { question: "Which WWE superstar is known for the '619' move?", answer: "Rey Mysterio" },
+            { question: "Who was the WWE Women's Tag Team Champions in 2023?", answer: "Damage CTRL (Bayley and Iyo Sky)" },
+            { question: "Which wrestler has a signature move called 'The Claymore Kick'?", answer: "Drew McIntyre" },
+            { question: "Who won the WWE SmackDown Tag Team Championships in 2022?", answer: "The Usos" },
+            { question: "Which WWE legend is known for his 'Hulkamania' persona?", answer: "Hulk Hogan" },
+            { question: "Who was the WWE Raw Women's Champion in 2023?", answer: "Asuka" },
+            { question: "Which WWE superstar is known for his 'Shattered Dreams' move?", answer: "Goldust" },
+            { question: "Who won the WWE Tag Team Championship at WrestleMania 39?", answer: "The Usos" },
+            { question: "Which WWE superstar is famous for his 'Jabroni' catchphrase?", answer: "The Rock" },
+            { question: "Who won the WWE Cruiserweight Championship in 2022?", answer: "Ricochet" },
+            { question: "Which WWE superstar is known for his 'Sister Abigail' finishing move?", answer: "Bray Wyatt" },
+            { question: "Who was the WWE 24/7 Champion in 2023?", answer: "R-Truth" },
+            { question: "Which WWE superstar is known for his 'Coast to Coast' move?", answer: "Rob Van Dam" },
+            { question: "Who won the WWE Raw Tag Team Championships in 2022?", answer: "RK-Bro" },
+            { question: "Which wrestler is known for his 'Hurricanrana' move?", answer: "Rey Mysterio" },
+            { question: "Who was the WWE Champion at the end of 2023?", answer: "Roman Reigns" },
+            { question: "Which WWE superstar has a finishing move called 'The Go To Sleep'?", answer: "CM Punk" },
+            { question: "Who won the WWE Women's Championship in 2021?", answer: "Charlotte Flair" },
+            { question: "Which wrestler is known for his 'Red Arrow' move?", answer: "Neville" },
+            { question: "Who was the WWE Raw Women's Champion in 2022?", answer: "Becky Lynch" },
+            { question: "Which WWE superstar is known for his 'Curb Stomp' finishing move?", answer: "Seth Rollins" },
+            { question: "Who won the WWE SmackDown Women's Championship at SummerSlam 2023?", answer: "Liv Morgan" },
+            { question: "Which WWE legend is known for his 'Razor's Edge' move?", answer: "Razor Ramon" },
+            { question: "Who was the WWE Cruiserweight Champion before the title was retired?", answer: "Jordan Devlin" },
+            { question: "Which WWE superstar is known for his 'Superkick' finishing move?", answer: "Shawn Michaels" },
+            { question: "Who won the WWE Intercontinental Championship at WrestleMania 38?", answer: "Ricochet" },
+            { question: "Which WWE superstar is known for his 'RKO' finishing move?", answer: "Randy Orton" },
+            { question: "Who was the WWE Tag Team Champion with The Miz in 2022?", answer: "John Morrison" },
+            { question: "Which wrestler is known for his 'Flying Elbow Drop'?", answer: "Randy Savage" },
+            { question: "Who won the WWE Women's Royal Rumble in 2022?", answer: "Ronda Rousey" },
+            { question: "Which WWE superstar is famous for his 'Kiss My Ass' club?", answer: "Mr. McMahon" },
+            { question: "Who was the WWE Champion in 2020?", answer: "Drew McIntyre" },
+            { question: "Which WWE wrestler is known for his 'Frog Splash'?", answer: "Eddie Guerrero" },
+            { question: "Who won the WWE SmackDown Women's Championship in 2022?", answer: "Charlotte Flair" },
+            { question: "Which WWE superstar is known for his 'Five Knuckle Shuffle' move?", answer: "John Cena" },
+            { question: "Who was the WWE NXT Women's Champion in 2022?", answer: "Mandy Rose" },
+            { question: "Which WWE wrestler is known for his 'Disarmer' submission move?", answer: "Becky Lynch" },
+            { question: "Who won the WWE Tag Team Championships with Big E in 2022?", answer: "Kofi Kingston" },
+            { question: "Which WWE superstar is known for his 'Punt Kick'?", answer: "Randy Orton" },
+            { question: "Who was the WWE Raw Tag Team Champion in 2022?", answer: "The Street Profits" },
+            { question: "Which WWE superstar is known for his 'The Shining Wizard' move?", answer: "Kenta" },
+            { question: "Who won the WWE SmackDown Women's Championship at WrestleMania 37?", answer: "Sasha Banks" },
+            { question: "Which WWE legend is known for his 'Heart Punch'?", answer: "Ted DiBiase" },
+            { question: "Who was the WWE Champion at the beginning of 2022?", answer: "Brock Lesnar" },
+            { question: "Which WWE superstar is known for his 'Samoan Drop' move?", answer: "Roman Reigns" },
+            { question: "Who won the WWE Money in the Bank briefcase in 2023?", answer: "LA Knight" },
+            { question: "Which WWE superstar is famous for his 'Worm' move?", answer: "Scotty 2 Hotty" },
+            { question: "Who was the WWE Women's Tag Team Champion in 2023?", answer: "Damage CTRL" },
+            { question: "Which WWE superstar is known for his 'Skull Crushing Finale'?", answer: "The Miz" },
+            { question: "Who won the WWE Universal Championship in 2024?", answer: "Roman Reigns" },
+            { question: "Which WWE superstar is known for his 'The End of Days' finishing move?", answer: "Baron Corbin" },
+            { question: "Who was the WWE Cruiserweight Champion in 2023?", answer: "Jordan Devlin" },
+            { question: "Which WWE superstar is known for his 'Kofimania' persona?", answer: "Kofi Kingston" },
+            { question: "Who won the WWE Tag Team Championship with Dolph Ziggler in 2022?", answer: "Robert Roode" },
+            { question: "Which WWE superstar is known for his 'Brogue Kick'?", answer: "Sheamus" },
+            { question: "Who won the WWE SmackDown Tag Team Championships in 2023?", answer: "The Usos" },
+            { question: "Which WWE superstar is famous for his 'Enzuigiri' move?", answer: "Antonio Cesaro" },
+            { question: "Who was the WWE Intercontinental Champion in 2024?", answer: "Gunther" },
+            { question: "Which WWE superstar is known for his 'The Flying Forearm' move?", answer: "Dolph Ziggler" },
+            { question: "Who won the WWE Women's Championship at WrestleMania 39?", answer: "Charlotte Flair" },
+            { question: "Which WWE superstar is known for his 'The Black Mass' kick?", answer: "Aleister Black" },
+            { question: "Who was the WWE Raw Tag Team Champion in 2023?", answer: "The Street Profits" },
+            { question: "Which WWE superstar is famous for his 'GTS' move?", answer: "CM Punk" },
+            { question: "Who won the WWE Women's Royal Rumble in 2024?", answer: "Ronda Rousey" },
+            { question: "Which WWE superstar is known for his 'The Big Ending' move?", answer: "Big E" },
+            { question: "Who was the WWE United States Champion in 2024?", answer: "Austin Theory" },
+            { question: "Which WWE superstar is famous for his 'The Finisher' move?", answer: "Seth Rollins" },
+            { question: "Who won the WWE Tag Team Championships with Jimmy Uso in 2022?", answer: "Jey Uso" },
+            { question: "Which WWE superstar is known for his 'The Sister Abigail' move?", answer: "Bray Wyatt" },
+            { question: "Who won the WWE Championship at WrestleMania 38?", answer: "Brock Lesnar" }
+        ];
+
+        document.getElementById('quizImage').addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * questionsAndAnswers.length);
+            const question = questionsAndAnswers[randomIndex].question;
+            const answer = questionsAndAnswers[randomIndex].answer;
+
+            document.getElementById('question').textContent = question;
+            document.getElementById('answer').textContent = answer;
+        });
+    </script>
+</body>
+</html>
