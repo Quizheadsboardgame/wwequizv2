@@ -3,163 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz</title>
+    <title>WWE</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * {
             margin: 0;
-            background-color: #0CC0DF; /* Background color */
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container {
+
+        body {
+            font-family: Arial, sans-serif; /* Standard font */
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            width: 40%;
-            max-width: 800px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow */
-            padding: 20px;
-        }
-        img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            cursor: pointer;
-            border: 5px solid #0CC0DF; /* Outer blue border color */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .qa-box {
-            margin-top: 20px;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent; /* Fully transparent background */
+            color: black; /* Standard text color */
             text-align: center;
         }
-        .question {
-            font-size: 1.4em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
+
+        #quiz-container {
+            background-color: transparent; /* Fully transparent container */
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
         }
+
+        #logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
         .answer {
-            font-size: 1.2em;
-            color: #555;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow */
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white; /* Change the answer color to white */
+        }
+
+        #next-button {
+            background-color: white; /* Change background color to white */
+            color: black; /* Change text color to black for visibility */
+            border: 2px solid #ff9900; /* Optional: Add a border for better visibility */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #next-button:hover {
+            background-color: #ffcc00; /* Change hover color for better effect */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img id="quizImage" src="https://i.imgur.com/Kxac95Y.png" alt="Quiz Image">
-        <div class="qa-box">
-            <div id="question" class="question">Click the image to get a question!</div>
-            <div id="answer" class="answer"></div>
-        </div>
+
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="WWE Logo">
+    <h1>WWE</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
     </div>
-    
-    <script>
-        const questionsAndAnswers = [
-            { question: "Who won the WWE Royal Rumble in 2023?", answer: "Cody Rhodes" },
-            { question: "Which wrestler holds the record for the most WWE Championship reigns?", answer: "Ric Flair" },
-            { question: "Who won the WWE Money in the Bank ladder match in 2022?", answer: "Theory" },
-            { question: "Which WWE superstar is known as 'The Deadman'?", answer: "The Undertaker" },
-            { question: "Who was the winner of the 2022 WWE Survivor Series WarGames match?", answer: "The Bloodline" },
-            { question: "Which wrestler is known for the 'RKO' finishing move?", answer: "Randy Orton" },
-            { question: "Who won the WWE SmackDown Women's Championship at WrestleMania 37?", answer: "Bianca Belair" },
-            { question: "Which WWE legend is famous for his 'Stone Cold Stunner'?", answer: "Stone Cold Steve Austin" },
-            { question: "Who was the WWE Champion before Brock Lesnar won the title at SummerSlam 2022?", answer: "Roman Reigns" },
-            { question: "Which wrestler is known as 'The Beast Incarnate'?", answer: "Brock Lesnar" },
-            { question: "Who won the WWE NXT Championship in 2021?", answer: "Bron Breakker" },
-            { question: "Which WWE superstar has a finishing move called 'The Attitude Adjustment'?", answer: "John Cena" },
-            { question: "Who was the 2022 WWE Women's Royal Rumble winner?", answer: "Ronda Rousey" },
-            { question: "Which WWE wrestler is known for his 'Yes! Movement'?", answer: "Daniel Bryan" },
-            { question: "Who is known as 'The Game' in WWE?", answer: "Triple H" },
-            { question: "Who won the WWE Intercontinental Championship in 2023?", answer: "Gunther" },
-            { question: "Which WWE superstar is known for his 'Spear' finishing move?", answer: "Edge" },
-            { question: "Who won the WWE United States Championship at WrestleMania 38?", answer: "Austin Theory" },
-            { question: "Which WWE superstar is known for the '619' move?", answer: "Rey Mysterio" },
-            { question: "Who was the WWE Women's Tag Team Champions in 2023?", answer: "Damage CTRL (Bayley and Iyo Sky)" },
-            { question: "Which wrestler has a signature move called 'The Claymore Kick'?", answer: "Drew McIntyre" },
-            { question: "Who won the WWE SmackDown Tag Team Championships in 2022?", answer: "The Usos" },
-            { question: "Which WWE legend is known for his 'Hulkamania' persona?", answer: "Hulk Hogan" },
-            { question: "Who was the WWE Raw Women's Champion in 2023?", answer: "Asuka" },
-            { question: "Which WWE superstar is known for his 'Shattered Dreams' move?", answer: "Goldust" },
-            { question: "Who won the WWE Tag Team Championship at WrestleMania 39?", answer: "The Usos" },
-            { question: "Which WWE superstar is famous for his 'Jabroni' catchphrase?", answer: "The Rock" },
-            { question: "Who won the WWE Cruiserweight Championship in 2022?", answer: "Ricochet" },
-            { question: "Which WWE superstar is known for his 'Sister Abigail' finishing move?", answer: "Bray Wyatt" },
-            { question: "Who was the WWE 24/7 Champion in 2023?", answer: "R-Truth" },
-            { question: "Which WWE superstar is known for his 'Coast to Coast' move?", answer: "Rob Van Dam" },
-            { question: "Who won the WWE Raw Tag Team Championships in 2022?", answer: "RK-Bro" },
-            { question: "Which wrestler is known for his 'Hurricanrana' move?", answer: "Rey Mysterio" },
-            { question: "Who was the WWE Champion at the end of 2023?", answer: "Roman Reigns" },
-            { question: "Which WWE superstar has a finishing move called 'The Go To Sleep'?", answer: "CM Punk" },
-            { question: "Who won the WWE Women's Championship in 2021?", answer: "Charlotte Flair" },
-            { question: "Which wrestler is known for his 'Red Arrow' move?", answer: "Neville" },
-            { question: "Who was the WWE Raw Women's Champion in 2022?", answer: "Becky Lynch" },
-            { question: "Which WWE superstar is known for his 'Curb Stomp' finishing move?", answer: "Seth Rollins" },
-            { question: "Who won the WWE SmackDown Women's Championship at SummerSlam 2023?", answer: "Liv Morgan" },
-            { question: "Which WWE legend is known for his 'Razor's Edge' move?", answer: "Razor Ramon" },
-            { question: "Who was the WWE Cruiserweight Champion before the title was retired?", answer: "Jordan Devlin" },
-            { question: "Which WWE superstar is known for his 'Superkick' finishing move?", answer: "Shawn Michaels" },
-            { question: "Who won the WWE Intercontinental Championship at WrestleMania 38?", answer: "Ricochet" },
-            { question: "Which WWE superstar is known for his 'RKO' finishing move?", answer: "Randy Orton" },
-            { question: "Who was the WWE Tag Team Champion with The Miz in 2022?", answer: "John Morrison" },
-            { question: "Which wrestler is known for his 'Flying Elbow Drop'?", answer: "Randy Savage" },
-            { question: "Who won the WWE Women's Royal Rumble in 2022?", answer: "Ronda Rousey" },
-            { question: "Which WWE superstar is famous for his 'Kiss My Ass' club?", answer: "Mr. McMahon" },
-            { question: "Who was the WWE Champion in 2020?", answer: "Drew McIntyre" },
-            { question: "Which WWE wrestler is known for his 'Frog Splash'?", answer: "Eddie Guerrero" },
-            { question: "Who won the WWE SmackDown Women's Championship in 2022?", answer: "Charlotte Flair" },
-            { question: "Which WWE superstar is known for his 'Five Knuckle Shuffle' move?", answer: "John Cena" },
-            { question: "Who was the WWE NXT Women's Champion in 2022?", answer: "Mandy Rose" },
-            { question: "Which WWE wrestler is known for his 'Disarmer' submission move?", answer: "Becky Lynch" },
-            { question: "Who won the WWE Tag Team Championships with Big E in 2022?", answer: "Kofi Kingston" },
-            { question: "Which WWE superstar is known for his 'Punt Kick'?", answer: "Randy Orton" },
-            { question: "Who was the WWE Raw Tag Team Champion in 2022?", answer: "The Street Profits" },
-            { question: "Which WWE superstar is known for his 'The Shining Wizard' move?", answer: "Kenta" },
-            { question: "Who won the WWE SmackDown Women's Championship at WrestleMania 37?", answer: "Sasha Banks" },
-            { question: "Which WWE legend is known for his 'Heart Punch'?", answer: "Ted DiBiase" },
-            { question: "Who was the WWE Champion at the beginning of 2022?", answer: "Brock Lesnar" },
-            { question: "Which WWE superstar is known for his 'Samoan Drop' move?", answer: "Roman Reigns" },
-            { question: "Who won the WWE Money in the Bank briefcase in 2023?", answer: "LA Knight" },
-            { question: "Which WWE superstar is famous for his 'Worm' move?", answer: "Scotty 2 Hotty" },
-            { question: "Who was the WWE Women's Tag Team Champion in 2023?", answer: "Damage CTRL" },
-            { question: "Which WWE superstar is known for his 'Skull Crushing Finale'?", answer: "The Miz" },
-            { question: "Who won the WWE Universal Championship in 2024?", answer: "Roman Reigns" },
-            { question: "Which WWE superstar is known for his 'The End of Days' finishing move?", answer: "Baron Corbin" },
-            { question: "Who was the WWE Cruiserweight Champion in 2023?", answer: "Jordan Devlin" },
-            { question: "Which WWE superstar is known for his 'Kofimania' persona?", answer: "Kofi Kingston" },
-            { question: "Who won the WWE Tag Team Championship with Dolph Ziggler in 2022?", answer: "Robert Roode" },
-            { question: "Which WWE superstar is known for his 'Brogue Kick'?", answer: "Sheamus" },
-            { question: "Who won the WWE SmackDown Tag Team Championships in 2023?", answer: "The Usos" },
-            { question: "Which WWE superstar is famous for his 'Enzuigiri' move?", answer: "Antonio Cesaro" },
-            { question: "Who was the WWE Intercontinental Champion in 2024?", answer: "Gunther" },
-            { question: "Which WWE superstar is known for his 'The Flying Forearm' move?", answer: "Dolph Ziggler" },
-            { question: "Who won the WWE Women's Championship at WrestleMania 39?", answer: "Charlotte Flair" },
-            { question: "Which WWE superstar is known for his 'The Black Mass' kick?", answer: "Aleister Black" },
-            { question: "Who was the WWE Raw Tag Team Champion in 2023?", answer: "The Street Profits" },
-            { question: "Which WWE superstar is famous for his 'GTS' move?", answer: "CM Punk" },
-            { question: "Who won the WWE Women's Royal Rumble in 2024?", answer: "Ronda Rousey" },
-            { question: "Which WWE superstar is known for his 'The Big Ending' move?", answer: "Big E" },
-            { question: "Who was the WWE United States Champion in 2024?", answer: "Austin Theory" },
-            { question: "Which WWE superstar is famous for his 'The Finisher' move?", answer: "Seth Rollins" },
-            { question: "Who won the WWE Tag Team Championships with Jimmy Uso in 2022?", answer: "Jey Uso" },
-            { question: "Which WWE superstar is known for his 'The Sister Abigail' move?", answer: "Bray Wyatt" },
-            { question: "Who won the WWE Championship at WrestleMania 38?", answer: "Brock Lesnar" }
-        ];
+</div>
 
-        document.getElementById('quizImage').addEventListener('click', function() {
-            const randomIndex = Math.floor(Math.random() * questionsAndAnswers.length);
-            const question = questionsAndAnswers[randomIndex].question;
-            const answer = questionsAndAnswers[randomIndex].answer;
+<script>
+    // Question and answers data
+    const quizData = [
+        { question: "What is 'The Undertaker' real name?", answer: "Mark Calaway." },
+        { question: "What is the name of WWE’s annual event that kicks off the road to WrestleMania?", answer: "Royal Rumble." },
+        { question: "Which wrestler is known for the catchphrase 'You can't see me'?", answer: "John Cena." },
+        { question: "What was the original name of WWE?", answer: "WWF/WWWF." },
+        { question: "What is the name of WWE’s flagship Monday show?", answer: "Monday Night Raw." },
+        { question: "Who did Hulk Hogan face in the main event of WrestleMania III?", answer: "André the Giant." },
+        { question: "Which wrestler is known as 'The Great One'?", answer: "Dwayne 'The Rock' Johnson." },
+        { question: "Who is the longest-reigning WWE Champion in history?", answer: "Bruno Sammartino (2,803 days)." },
+        { question: "What match type is held in a structure with steel walls and a roof?", answer: "Hell in a Cell." },
+        { question: "Which wrestler is known as 'The Heartbreak Kid'?", answer: "Shawn Michaels." },
+        { question: "What year did the first WrestleMania take place?", answer: "1985." },
+        { question: "Who was the CEO and Chairman of WWE until 2023?", answer: "Vince McMahon." },
+        { question: "Who famously said, 'To be the man, you gotta beat the man'?", answer: "Ric Flair." },
+        { question: "Which wrestler was known for his 'pipe bomb' promo in 2011?", answer: "CM Punk." },
+        { question: "Who was the first WWE Diva?", answer: "Sable." },
+        { question: "What year did WWE purchase WCW?", answer: "2001." },
+        { question: "Which wrestler is known for his 'Stone Cold Stunner' finishing move?", answer: "'Stone Cold' Steve Austin." },
+        { question: "What is the name of John Cena's finishing move?", answer: "Attitude Adjustment (AA)." },
+        { question: "Who was known as the 'American Dream'?", answer: "Dusty Rhodes." },
+        { question: "What is the name of the pay-per-view event that features the TLC match?", answer: "Tables, Ladders, and Chairs." },
+        { question: "Which wrestler famously wore a mask and went by 'The Phenom'?", answer: "The Undertaker." },
+        { question: "Who is the youngest WWE Champion in history?", answer: "Randy Orton (at age 24)." },
+        { question: "Which wrestler is known for his 'Flying Elbow Drop'?", answer: "Macho Man Randy Savage." },
+        { question: "What is the name of the pay-per-view that features a brief case above the ring?", answer: "Money in the Bank." },
+        { question: "Who was the first woman inducted into the WWE Hall of Fame?", answer: "The Fabulous Moolah." },
+        { question: "What is the name of WWE’s developmental brand?", answer: "NXT." },
+        { question: "Who did Bret Hart face in his final WWE match?", answer: "Vince McMahon (WrestleMania 26)." },
+        { question: "Which wrestler is known as 'The Beast Incarnate'?", answer: "Brock Lesnar." },
+        { question: "What year did the first Hell in a Cell match take place?", answer: "1997." },
+        { question: "Which wrestler used the nickname 'The Big Red Machine'?", answer: "Kane." },
+        { question: "Which wrestler famously turned heel at WrestleMania 17?", answer: "'Stone Cold' Steve Austin." },
+        { question: "What is the name of the tag team that includes members Jimmy and Jey?", answer: "The Usos." },
+        { question: "Who did The Rock face in the main event of WrestleMania 28?", answer: "John Cena." },
+        { question: "Which match type allows wrestlers to win by pinfall, submission, or escaping the cage?", answer: "Steel Cage Match." },
+        { question: "What is the name of the iconic WWE entrance theme for Triple H?", answer: "'The Game.'" },
+        { question: "Who was the first-ever WWE Women’s Champion?", answer: "The Fabulous Moolah." },
+        { question: "What is the name of the stable that included Triple H, Shawn Michaels, and X-Pac?", answer: "D-Generation X." },
+        { question: "Who won the inaugural Money in the Bank ladder match?", answer: "Edge." },
+        { question: "What year did WrestleMania 30 take place?", answer: "2014." },
+        { question: "Who was the first African-American WWE Champion?", answer: "Kofi Kingston (WrestleMania 35)." },
+        { question: "Which wrestler is known for the catchphrase 'Woooo!'?", answer: "Ric Flair." },
+        { question: "Which wrestler famously wore a pink jumpsuit and had the nickname 'Hitman'?", answer: "Bret Hart." },
+        { question: "Who was the first wrestler to win the WWE Grand Slam?", answer: "Shawn Michaels." },
+        { question: "Which wrestler is known for the 'RKO' finishing move?", answer: "Randy Orton." },
+        { question: "What is the name of the famous wrestling venue in New York City?", answer: "Madison Square Garden." },
+        { question: "Who is the first woman to compete in a men's match at WrestleMania?", answer: "Chyna (WrestleMania 17)." },
+        { question: "What is the name of the stable that included Seth Rollins, Roman Reigns, and Dean Ambrose?", answer: "The Shield." },
+        { question: "Which wrestler is known for the catchphrase 'I'm not a role model'?", answer: "Edge." },
+        { question: "What year did the first Women's Royal Rumble take place?", answer: "2018." },
+        { question: "What is the name of the faction led by Paul Heyman?", answer: "The Dangerous Alliance." },
+        { question: "Which wrestler is known as 'The Viper'?", answer: "Randy Orton." },
+        { question: "Who is known for his 'Sister Abigail' finishing move?", answer: "Bray Wyatt." },
+        { question: "What year did WWE introduce the Women's Tag Team Championship?", answer: "2019." },
+        { question: "What is the name of the signature move of AJ Styles?", answer: "Styles Clash." },
+        { question: "Who was the first WWE Intercontinental Champion?", answer: "Pat Patterson." },
+        { question: "Which female wrestler is known for the catchphrase 'This is my house'?", answer: "Naomi." },
+        { question: "What year did the 'Attitude Era' begin?", answer: "1997." },
+        { question: "Who did Chris Jericho defeat to become the first Undisputed WWE Champion?", answer: "The Rock and Steve Austin (at Vengeance 2001)." },
+        { question: "Which wrestler is known for his 'Yes!' chants?", answer: "Daniel Bryan." },
+        { question: "What is the name of the stable that included Kevin Nash, Scott Hall, and Hulk Hogan?", answer: "The New World Order (nWo)." },
+        { question: "What is the name of the match where the winner receives a title shot at WrestleMania?", answer: "Royal Rumble." },
+        { question: "Which wrestler is known as 'The Phenomenal One'?", answer: "AJ Styles." },
+        { question: "Which wrestler is known for the 'Belly-to-Belly Suplex'?", answer: "Kurt Angle." },
+        { question: "Who is known for the catchphrase 'The Best in the World'?", answer: "CM Punk." },
+    ];
 
-            document.getElementById('question').textContent = question;
-            document.getElementById('answer').textContent = answer;
-        });
-    </script>
+    let currentQuestionIndex = 0;
+
+    // Shuffle the quiz data
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Start the quiz
+    shuffle(quizData);
+    showQuestion();
+
+    function showQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        questionContainer.innerText = quizData[currentQuestionIndex].question;
+        answerContainer.innerText = "Loading answer...";
+
+        // Fade in effect
+        answerContainer.classList.remove("fadeIn");
+        answerContainer.classList.add("fadeOut");
+
+        setTimeout(() => {
+            answerContainer.innerText = quizData[currentQuestionIndex].answer;
+            answerContainer.classList.remove("fadeOut");
+            answerContainer.classList.add("fadeIn");
+        }, 500);
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            showQuestion();
+        } else {
+            const questionContainer = document.getElementById("question");
+            const answerContainer = document.getElementById("answer");
+            questionContainer.innerText = "Thank you for playing!";
+            answerContainer.innerText = "";
+            document.getElementById("next-button").style.display = "none"; // Hide the next button
+        }
+    }
+</script>
+
 </body>
 </html>
